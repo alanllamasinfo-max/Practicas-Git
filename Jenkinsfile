@@ -81,8 +81,8 @@ pipeline {
 
         stage('Update Git Logs') {
             steps {
-                // Usamos el nuevo ID que acabas de crear en Jenkins: 'github-alan'
-                withCredentials([usernamePassword(credentialsId: 'github-alan', usernameVariable: 'GITHUB_APP', passwordVariable: 'GITHUB_ACCESS_TOKEN')]) {
+                // Usamos el nuevo ID que acabas de crear en Jenkins: 'github-alexis'
+                withCredentials([usernamePassword(credentialsId: 'github-alexis', usernameVariable: 'GITHUB_APP', passwordVariable: 'GITHUB_ACCESS_TOKEN')]) {
                     sh '''#!/bin/bash
                         # Pon tus datos reales para que los commits queden a tu nombre
                         git config user.email "alan@ejemplo.com"
