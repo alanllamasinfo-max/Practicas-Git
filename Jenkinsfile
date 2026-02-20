@@ -103,17 +103,31 @@ pipeline {
                         git config user.email "alexis@ejemplo.com"
                         git config user.name "alexis Llamas"
                         
+                        # 1. Creamos la carpeta Applied dentro del esquema (por si no existe)
+                        mkdir -p schemas/$schema/Applied
+                        
                         for file in $TEMP_DIR/*.sql; do
                             [ -f "$file" ] || continue
+                            
+                            # Obtenemos la ruta del archivo original en tu repo
                             original_file="schemas/$schema/$(basename "$file")"
+                            
+                            # 2. Dejamos constancia en el log
                             echo "" >> schemas/$schema/$LOG_FILE
                             echo "$original_file executed in $ENV_NAME in $(date)" >> schemas/$schema/$LOG_FILE
+                            
+                            # 3. MOVEVOS EL ARCHIVO ORIGINAL A LA CARPETA APPLIED
+                            mv "$original_file" "schemas/$schema/Applied/"
                         done
 
+                        # Limpiamos archivos temporales
                         rm -rf $TEMP_DIR result_code.txt
 
+                        # Añadimos todos los cambios (el log modificado y los archivos movidos)
                         git add -A
-                        git commit -m "Local Test: Files for schema $schema executed in $ENV_NAME" || echo "No changes to commit"
+                        git commit -m "Local Test: Files executed and moved to Applied in $ENV_NAME" || echo "No changes to commit"
+                        
+                        # Subimos los cambios a GitHub
                         git push https://$GITHUB_APP:$GITHUB_ACCESS_TOKEN@github.com/alanllamasinfo-max/Practicas-Git.git HEAD:dev
                     '''
                 }
