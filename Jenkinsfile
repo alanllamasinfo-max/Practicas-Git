@@ -47,7 +47,7 @@ pipeline {
 
         stage('Ask confirmation') {
             steps {
-                input message: 'Apply changes to primary_db?', id: 'Confirm'
+                input message: 'Apply changes to pre?', id: 'Confirm'
             }
         }
 
@@ -55,7 +55,7 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'postgres-local-creds', usernameVariable: 'DB_USER', passwordVariable: 'DB_PASSWORD')]) {
                     sh '''#!/bin/bash
-                        echo "Iniciando ejecución de scripts en PostgreSQL (primary_db)..."
+                        echo "Iniciando ejecución de scripts en PostgreSQL (pre)..."
                         
                         # Comprobamos si psql está instalado en el contenedor de Jenkins
                         if ! command -v psql &> /dev/null; then
