@@ -12,8 +12,8 @@ pipeline {
     }
 
     environment {
-        LOG_FILE = 'dev.log'
-        ENV_NAME = 'dev'
+        LOG_FILE = 'pre.log'
+        ENV_NAME = 'pre'
         // Usamos una carpeta dentro de tu proyecto local en lugar del /tmp del sistema
         TEMP_DIR = "${WORKSPACE}/tmp_files_to_upload" 
     }
@@ -29,7 +29,7 @@ pipeline {
                     mkdir -p schemas/$schema
                     touch schemas/$schema/$LOG_FILE
                     
-                    # 3. Buscamos archivos nuevos que no estén en el log de dev
+                    # 3. Buscamos archivos nuevos que no estén en el log de pre
                     for file in schemas/$schema/*.sql; do
                         # Evita errores si no hay archivos .sql en la carpeta
                         [ -e "$file" ] || continue 
@@ -103,11 +103,12 @@ pipeline {
                         git add -A
                         git commit -m "Local Test: Files for schema $schema executed in $ENV_NAME" || echo "No changes to commit"
                         
-                        # Hacemos push explícitamente apuntando a la rama 'dev' de tu repositorio remoto
-                        git push https://$GITHUB_APP:$GITHUB_ACCESS_TOKEN@github.com/Equifax/7362_ES_GCP_DB_SCHEMAS_IIT.git HEAD:dev
+                        # Hacemos push explícitamente apuntando a la rama 'pre' de tu repositorio remoto
+                        git push https://$GITHUB_APP:$GITHUB_ACCESS_TOKEN@github.com/Equifax/7362_ES_GCP_DB_SCHEMAS_IIT.git HEAD:pre
                     '''
                 }
             }
         }
     }
 }
+
