@@ -1,3 +1,4 @@
+
 pipeline {
     // 'any' le dice a Jenkins que corra directamente en la máquina donde está instalado
     agent any 
@@ -80,11 +81,12 @@ pipeline {
 
         stage('Update Git Logs') {
             steps {
-                // Mantenemos tus credenciales para poder hacer el push a GitHub
-                withCredentials([usernamePassword(credentialsId: 'github-equifax-prod', usernameVariable: 'GITHUB_APP', passwordVariable: 'GITHUB_ACCESS_TOKEN')]) {
+                // Usamos el nuevo ID que acabas de crear en Jenkins: 'github-alan'
+                withCredentials([usernamePassword(credentialsId: 'github-alan', usernameVariable: 'GITHUB_APP', passwordVariable: 'GITHUB_ACCESS_TOKEN')]) {
                     sh '''#!/bin/bash
-                        git config user.email "JenkinsLocal@tusistema.com"
-                        git config user.name "Jenkins Local"
+                        # Pon tus datos reales para que los commits queden a tu nombre
+                        git config user.email "alan@ejemplo.com"
+                        git config user.name "Alan Llamas"
                         
                         # Actualizamos el log localmente solo para los archivos que procesamos
                         for file in $TEMP_DIR/*.sql; do
@@ -103,12 +105,11 @@ pipeline {
                         git add -A
                         git commit -m "Local Test: Files for schema $schema executed in $ENV_NAME" || echo "No changes to commit"
                         
-                        # Hacemos push explícitamente apuntando a la rama 'pre' de tu repositorio remoto
-                        git push https://$GITHUB_APP:$GITHUB_ACCESS_TOKEN@github.com/Equifax/7362_ES_GCP_DB_SCHEMAS_IIT.git HEAD:pre
+                        # Hacemos push a tu repo real usando las variables inyectadas
+                        git push https://$GITHUB_APP:$GITHUB_ACCESS_TOKEN@github.com/alanllamasinfo-max/Practicas-Git.git HEAD:dev
                     '''
                 }
             }
         }
     }
 }
-
