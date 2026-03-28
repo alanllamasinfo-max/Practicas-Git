@@ -12,7 +12,7 @@
 
 ## 📋 Descripción
 
-Este repositorio contiene la infraestructura de un pipeline de Jenkins que automatiza la aplicación de migraciones SQL a bases de datos PostgreSQL. El pipeline:
+Este repositorio contiene la infraestructura de un pipeline de Jenkins que automatiza la aplicacion de cambios o sentencias SQL a bases de datos PostgreSQL. El pipeline:
 
 - Detecta automáticamente qué scripts SQL **aún no han sido ejecutados** en el entorno objetivo
 - Solicita **confirmación manual** antes de aplicar cambios (aprobación humana en el gate)
@@ -65,12 +65,9 @@ PostgreSQL (pre / prod)
 ```
 .
 ├── Jenkinsfile                        # Pipeline principal (con psql real)
-├── primer-jenkinsfile                 # Versión inicial / simulación local
-│
 └── schemas/
     ├── pruebas/                       # Esquema "pruebas" de PostgreSQL
     │   ├── pre.log                    # Registro de scripts ya ejecutados
-    │   ├── 01_create_table.sql        # Scripts pendientes de ejecutar
     │   └── Applied/
     │       └── 01_create_table.sql    # Scripts ya ejecutados y archivados
     │
@@ -102,11 +99,11 @@ Configuradas directamente en el `Jenkinsfile`:
 |------------|-------------------|------------------------------------------|
 | `LOG_FILE` | `pre.log`         | Nombre del archivo de auditoría          |
 | `ENV_NAME` | `pre`             | Nombre del entorno objetivo              |
-| `DB_HOST`  | `172.17.0.1`      | IP del host Docker (gateway por defecto) |
+| `DB_HOST`  | `10.0.0.1`      | IP del host Docker (gateway por defecto) |
 | `DB_PORT`  | `5432`            | Puerto de PostgreSQL                     |
 | `DB_NAME`  | `pre`             | Nombre de la base de datos               |
 
-> ⚠️ Si Jenkins y PostgreSQL no están en el mismo host Docker, reemplaza `172.17.0.1` con la IP real de tu servidor.
+> ⚠️ Si Jenkins y PostgreSQL no están en el mismo host Docker, reemplaza `10.0.0.1` con la IP real de tu servidor.
 
 ### 3. Parámetros del Job (en tiempo de ejecución)
 
@@ -181,10 +178,10 @@ Si un script ya fue ejecutado, simplemente se ignora en la próxima ejecución.
 Este pipeline está diseñado para ejecutarse desde un contenedor Jenkins que conecta a un contenedor PostgreSQL a través del host:
 
 ```
-[Jenkins Container] → 172.17.0.1:5432 → [PostgreSQL Container]
+[Jenkins Container] → 10.0.0.1:5432 → [PostgreSQL Container]
 ```
 
-La IP `172.17.0.1` es el gateway estándar de la red `docker0` en Linux. Para verificar la IP correcta en tu entorno:
+La IP `10.0.0.1` es el gateway estándar de la red `docker0` en Linux. Para verificar la IP correcta en tu entorno:
 
 ```bash
 docker network inspect bridge | grep Gateway
